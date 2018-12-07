@@ -1,0 +1,100 @@
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 306863.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 306863.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307022.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307022.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307181.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307181.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307340.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307340.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307499.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307499.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307658.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307658.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307817.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307817.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307976.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 307976.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 308135.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 308135.0000000, 3939037.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 308294.0000000, 3938878.0000000 ]
+},
+{
+	id: 'randid',
+	name: 'randname',
+	coordinates: [ 308294.0000000, 3939037.0000000 ]
+} 
