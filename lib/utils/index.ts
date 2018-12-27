@@ -1,3 +1,4 @@
+import { PointObject } from '../typings'
 // calculate angle of vector -(AB)-> and -(XY)->
 /*
   @param: pA,pB,pX,pY : Point ( refer to typings.ts in the future, now just ctrl-F )
@@ -6,7 +7,7 @@
     bottom: scala(AB)*scala(XY)
   source: highschool geometry 
 */
-const calculateAngle = (pA,pB,pX,pY) => {
+const calculateAngle = (pA: PointObject,pB: PointObject,pX: PointObject,pY: PointObject) => {
   const A = pA.coordinates
   const B = pB.coordinates
   const X = pX.coordinates
@@ -26,7 +27,7 @@ const calculateAngle = (pA,pB,pX,pY) => {
   return Math.acos(arccos_AB_XY)*180/Math.PI
 }
 
-const calculateLength = (pA,pB) => {
+const calculateLength = (pA: PointObject,pB: PointObject) => {
   const A = pA.coordinates
   const B = pB.coordinates
 
@@ -37,7 +38,7 @@ const calculateLength = (pA,pB) => {
 }
 
 
-module.exports = {
+export {
   calculateAngle,
   calculateLength
 }

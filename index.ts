@@ -1,22 +1,21 @@
-#!/usr/bin/env node
-const {
+import {
   calculateAngle,
   calculateLength
-} = require('./utils/index')
+} from './lib/utils/index'
 
-const {
+import {
   lengthPointToLine,
-  // special two fuction, which takes array of [lng, lat] instead of point format
   getMirrorPointOnLine,
-  calcLength,
-} = require('./utils/geometry')
+} from './lib/utils/geometry'
 
-const {
+import {
   POINT_00,
   POINT_0_m1
-} = require('./utils/constants')
+} from './lib/utils/constants'
 
-const mockData = require('./mock')
+import { PointObject, PatternObject, MutationObject } from './lib/typings'
+
+//const mockData = require('./mock')
 
 /*
   return an object of fundamental information of a grid pattern
@@ -27,7 +26,8 @@ const mockData = require('./mock')
     alpha: float - angle of vector(AC) with vector(0,-1), should be 0 if the grid is not rotated
   }
 */
-const extractBasicGrid = (pA, pB, pC) => {
+export const extractBasicGrid = (pA: PointObject, pB: PointObject, pC: PointObject): { lng: number, lat: number, alpha: number } | null => {
+  // by convention, angle(AB, (1,0)) === angle (AC, (0,-1)) if angle(BAC) === 90 rad
   const squareTop = calculateAngle(pA, pB, pA, pC) === 90
   if( !squareTop ) {
     console.log('invalid top lefts points')
@@ -35,7 +35,6 @@ const extractBasicGrid = (pA, pB, pC) => {
   }
 
   const angleAC = calculateAngle(pA, pC, POINT_00, POINT_0_m1)
-  // by convention, angle(AB, (1,0)) === angle (AC, (0,-1)) if angle(BAC) === 90 rad
 
   // calculate distance AB (lng) and AC (lat)
   const lng = calculateLength(pA,pB)
@@ -60,35 +59,22 @@ const extractBasicGrid = (pA, pB, pC) => {
     X  X  X  X  X  X  X
   ```
 
-  fundamental types: 
-    Point: {
-      coordinates: [lng0, lat0]
-      [key: string]: any
-    }
-    ViewPort: {
-      NE: [lng, lat]   --->North East of the view port 
-      SW: [lng, lat]   --->South West of the view port
-    }
-
-  @param: gridPattern: object of grid pattern
+  gridPattern: object of grid pattern
     { 
       topLefts: {
         A: Point
         B: Point
         C: Point
-      }
-      mutation: {
-        rotate: <number>
-        extend: <ViewPort>
-        spacing: {
-          lat: <number> 
-          lng: <number>
-        }
+    }
+  mutation: object of grid manipulation 
+    {
+      rotate: <number>
+      extend: <ViewPort>
+      spacing: {
+        lat: <number> 
+        lng: <number>
       }
     }
-
-  @param: data: array of point arrays
-    [Point, Point, Point,...]
 
   @return: 
     - With No "mutation" flag passed: 
@@ -107,15 +93,18 @@ const extractBasicGrid = (pA, pB, pC) => {
       + Array of points within grid + 
       + new Pattern Object (a new topLefts set of points)
 */
-const getPointInGrid = ({pattern, data}) => {
+export const getPointInGrid = ({pattern, data, mutation}: { pattern: PatternObject, data: PointObject[], mutation: MutationObject}): PointObject[] => {
 
   const {A,B,C} = pattern.topLefts 
-
+  const gridData = extractBasicGrid(A,B,C)
+  if (gridData === null) {
+    console.log('invalid topleft grid pattern', A,B,C)
+    return []
+  }
   const {
-    lng,
-    lat,
-    alpha
-  } = extractBasicGrid(A,B,C)
+    lng, 
+    lat, 
+  } = gridData
 
   // assume: filtering points in grid pattern
   const filteredPointsInGrid = data.filter(point => {
@@ -147,12 +136,17 @@ const getPointInGrid = ({pattern, data}) => {
     grid-rotation
     latSpacing and/or lngSpacing
 */
-const changeSpacingOfGrid = ({
+export const changeSpacingOfGrid = ({
   pattern, 
   data,
   latSpacing, 
   lngSpacing
-}) => {
+}: {
+  pattern: PatternObject, 
+  data: PointObject[],
+  latSpacing: number | null, 
+  lngSpacing: number | null
+}): PointObject[] => {
   /*
     get the minimum lat/lng from the A,B,C in pattern
     for each point in data: 
@@ -162,21 +156,23 @@ const changeSpacingOfGrid = ({
   */
    
   const {A,B,C} = pattern.topLefts
-  
+
+  const gridData = extractBasicGrid(A,B,C)
+  if (gridData === null) {
+    console.log('invalid topleft grid pattern', A,B,C)
+    return []
+  }
   const {
     lng, 
     lat, 
-    alpha,
-  } = extractBasicGrid(A,B,C)
+  } = gridData
 
   for (let point of data) {
     try {
 
-      console.log('-----------------------------------')
-      console.log('old point: ',point.coordinates)
+      let pointArray = point.coordinates
       if (lngSpacing) {
         // change lng spacing first
-        let pointArray = point.coordinates
         const mirrorPointToAC_Array = getMirrorPointOnLine(A.coordinates, C.coordinates, pointArray)
         const lngNewPointLngChanged = (lngSpacing/lng)*(pointArray[0] - mirrorPointToAC_Array[0]) + mirrorPointToAC_Array[0]
         const latNewPointLngChanged = (lngSpacing/lng)*(pointArray[1] - mirrorPointToAC_Array[1]) + mirrorPointToAC_Array[1]
@@ -191,7 +187,6 @@ const changeSpacingOfGrid = ({
         const latNewPointLatChanged = (latSpacing/lat)*(pointArray[1] - mirrorPointToAB_Array[1]) + mirrorPointToAB_Array[1]
         point.coordinates = [lngNewPointLatChanged, latNewPointLatChanged]
 
-        console.log('new point: ',point.coordinates)
       }
 
     } catch(err) {
@@ -203,20 +198,3 @@ const changeSpacingOfGrid = ({
 
 
 }
-
-const spacingChanged = changeSpacingOfGrid({
-  pattern: {
-    topLefts: mockData.topLefts
-  },
-  data: mockData.data,
-  lngSpacing: 200,
-  latSpacing: 200,
-})
-
-//const result = getPointInGrid({
-//  data: {
-//    topLefts: mockData.topLefts
-//  },
-//  mockData.data)
-//
-//console.log(result)

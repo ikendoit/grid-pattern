@@ -1,7 +1,8 @@
+import { PointObject } from '../typings'
 // TYPES: points: [longitude,latitude]
 const calcLength = (
-  point1,
-  point2
+  point1: [number, number],
+  point2: [number, number]
 ) => {
   let x1, x2, y1, y2;
   if (
@@ -25,10 +26,10 @@ const calcLength = (
 // get mirror point of point Origin to line containing point1 and point2
 // TYPES: points are: [lng, lat]
 const getMirrorPointOnLine = (
-  point1,
-  point2,
-  pointOrigin
-) => {
+  point1: [number, number],
+  point2: [number, number],
+  pointOrigin: [number, number]
+): [number, number] => {
   const x1 = point1[0];
   const x2 = point2[0];
   const x3 = pointOrigin[0];
@@ -37,7 +38,7 @@ const getMirrorPointOnLine = (
   const y3 = pointOrigin[1];
   // y = f(x) = a*x + b  (a = slope)
   let a = null;
-  let mirrorPoint;
+  let mirrorPoint: [number, number];
   let mirrorX;
   let mirrorY;
 
@@ -58,20 +59,13 @@ const getMirrorPointOnLine = (
 
   mirrorPoint = [mirrorX, mirrorY];
 
-  // check if mirror point is between point1 and 2 : AX + BX === AB
-
-  //if (pointOnLine(point1, point2, mirrorPoint)) {
-    return mirrorPoint;
-  //} else {
-  //  // if mirror point is not between point1 and point2 => return null
-  //  return null;
-  //}
+  return mirrorPoint 
 };
 
 const pointOnLine = (
-  point1,
-  point2,
-  pointToCheck,
+  point1: [number, number],
+  point2: [number, number],
+  pointToCheck: [number, number],
   toFixedConst = 13
 ) => {
   const point1_pointCheck_point2 =
@@ -87,15 +81,14 @@ const pointOnLine = (
 
 // calculate length from pointA to line containing pointB and pointC
 // params are all points types
-const lengthPointToLine = (pA, pB, pOrigin) => {
+const lengthPointToLine = (pA: PointObject, pB: PointObject, pOrigin: PointObject) => {
   const A = pA.coordinates
   const B = pB.coordinates
   const origin = pOrigin.coordinates
 
-  // get mirror point: [number, number]
-  const mirrorPoint = getMirrorPointOnLine(A,B,origin)
+  const mirrorPoint: [number, number] = getMirrorPointOnLine(A,B,origin)
   if (!mirrorPoint) {
-    throw new Error('cannot calculate length point to line: ',A,B,origin)
+    throw new Error(`cannot calculate length point to line: ${A.toString()}, ${B.toString()}, ${origin.toString()}`)
   }
 
   // get length mirror point to origin point
@@ -103,7 +96,7 @@ const lengthPointToLine = (pA, pB, pOrigin) => {
   return length
 }
 
-module.exports =  {
+export {
   lengthPointToLine,
   getMirrorPointOnLine,
   calcLength,
